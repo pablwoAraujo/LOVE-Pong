@@ -43,8 +43,20 @@ function love.draw()
     -- Começando a renderizar na resolução virtual
     push:apply('start')
 
+    -- Definindo a cor de background do jogo
+    love.graphics.clear(40 / 255, 45 / 255, 52 / 255, 255 / 255)
+
     -- Desenhando um texto na tela
-    love.graphics.printf("Hello Pong!", 0, VIRTUAL_HEIGHT / 2, VIRTUAL_WIDTH, "center")
+    love.graphics.printf("Hello Pong!", 0, 20, VIRTUAL_WIDTH, "center")
+
+    -- Renderizando a primeira raquete (Esquerda)
+    love.graphics.rectangle('fill', 10, 30, 5, 20)
+
+    -- Renderizando a segunda raquete (Direita)
+    love.graphics.rectangle('fill', VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT - 50, 5, 20)
+
+    -- Renderizando a bola no centro
+    love.graphics.rectangle('fill', VIRTUAL_WIDTH / 2 - 2, VIRTUAL_HEIGHT / 2 - 2, 4, 4)
 
     -- Finalizando a renderização na resolução virtual
     push:apply('end')
