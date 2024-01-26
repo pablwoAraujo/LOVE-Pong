@@ -12,6 +12,9 @@ VIRTUAL_HEIGHT = 243
 
 -- Função usada para inicializar o jogo
 function love.load()
+    -- Usando o filtro para evitar o desfoque no texto
+    love.graphics.setDefaultFilter('nearest', 'nearest')
+
     -- Define a resolução virtual, que será renderizada dentro das dimensões da janela real
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         fullscreen = false,
@@ -35,7 +38,7 @@ function love.draw()
     push:apply('start')
 
     -- Desenhando um texto na tela
-    love.graphics.printf("Hello Pong!", 0, WINDOW_HEIGHT / 2, WINDOW_WIDTH, "center")
+    love.graphics.printf("Hello Pong!", 0, VIRTUAL_HEIGHT / 2, VIRTUAL_WIDTH, "center")
 
     -- Finalizando a renderização na resolução virtual
     push:apply('end')
