@@ -15,6 +15,12 @@ function love.load()
     -- Usando o filtro para evitar o desfoque no texto
     love.graphics.setDefaultFilter('nearest', 'nearest')
 
+    -- Objeto com a nova fonte e tamanho
+    retroFont = love.graphics.newFont('font.ttf', 8)
+
+    -- Definindo a fonte ativa
+    love.graphics.setFont(retroFont)
+
     -- Define a resolução virtual, que será renderizada dentro das dimensões da janela real
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         fullscreen = false,
