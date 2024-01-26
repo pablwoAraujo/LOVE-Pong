@@ -12,6 +12,15 @@ function love.load()
     })
 end
 
+-- Captura as teclas pressionadas
+function love.keypressed(key)
+    -- Se a tecla pressionada foi a tecla de escape (ESC)
+    if key == "escape" then
+        -- Encerrando o jogo
+        love.event.quit()
+    end
+end
+
 -- Função para desenhar na tela
 function love.draw()
     -- Desenhando um texto na tela
