@@ -47,16 +47,16 @@ end
 function love.update(dt)
     -- Movimentação do player 1
     if love.keyboard.isDown('w') then
-        player1Y = player1Y + -PADDLE_SPEED * dt
+        player1Y = math.max(0, player1Y + -PADDLE_SPEED * dt)
     elseif love.keyboard.isDown('s') then
-        player1Y = player1Y + PADDLE_SPEED * dt
+        player1Y = math.min(VIRTUAL_HEIGHT - 20, player1Y + PADDLE_SPEED * dt)
     end
 
     -- Movimentação do player 2
     if love.keyboard.isDown('up') then
-        player2Y = player2Y + -PADDLE_SPEED * dt
+        player2Y = math.max(0, player2Y + -PADDLE_SPEED * dt)
     elseif love.keyboard.isDown('down') then
-        player2Y = player2Y + PADDLE_SPEED * dt
+        player2Y = math.min(VIRTUAL_HEIGHT - 20, player2Y + PADDLE_SPEED * dt)
     end
 end
 
