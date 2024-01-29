@@ -2,6 +2,13 @@
 -- https://github.com/Ulydev/push
 push = require "push"
 
+-- Biblioteca que nos permite usar classes como na orientação a objetos
+-- https://github.com/vrld/hump/blob/master/class.lua
+Class = require "class"
+
+-- Nossa classe Ball para representar a bola
+require "Ball"
+
 -- Definindo as dimensões da janela
 WINDOW_WIDTH = 1280;
 WINDOW_HEIGHT = 720;
@@ -46,13 +53,8 @@ function love.load()
     player1Y = 30
     player2Y = VIRTUAL_HEIGHT - 50
 
-    -- Posição da bola
-    ballX = VIRTUAL_WIDTH / 2
-    ballY = VIRTUAL_HEIGHT / 2
-
-    -- Delta a bola
-    ballDX = math.random(2) == 1 and 100 or -100
-    ballDY = math.random(-50, 50)
+    -- Criando a instância do objeto Ball
+    ball = Ball(VIRTUAL_WIDTH / 2 - 2, VIRTUAL_HEIGHT / 2 - 2, 4, 4)
 
     -- Guardando o estado do jogo
     gameState = "start"
@@ -74,10 +76,9 @@ function love.update(dt)
         player2Y = math.min(VIRTUAL_HEIGHT - 20, player2Y + PADDLE_SPEED * dt)
     end
 
-    -- Deefine o movimento inicial da bola com base no ballDX e ballDY, se o estado do jogo for "play";
+    -- Atualiza o movimento da bola se estivermos no estado de jogo "play"
     if gameState == "play" then
-        ballX = ballX + ballDX * dt
-        ballY = ballY + ballDY * dt
+        ball:update(dt)
     end
 end
 
@@ -96,11 +97,7 @@ function love.keypressed(key)
             gameState = "start"
 
             -- Volve a bola para posição inicial
-            ballX = VIRTUAL_WIDTH / 2
-            ballY = VIRTUAL_HEIGHT / 2
-
-            ballDX = math.random(2) == 1 and 100 or -100
-            ballDY = math.random(-50, 50) * 1.5
+            ball:reset()
         end
     end
 end
@@ -135,7 +132,7 @@ function love.draw()
     love.graphics.rectangle("fill", VIRTUAL_WIDTH - 10, player2Y, 5, 20)
 
     -- Renderizando a bola no centro
-    love.graphics.rectangle("fill", ballX, ballY, 4, 4)
+    ball:render()
 
     -- Finalizando a renderização na resolução virtual
     push:apply("end")
