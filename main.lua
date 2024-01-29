@@ -115,6 +115,9 @@ function love.draw()
     -- Começando a renderizar na resolução virtual
     push:apply("start")
 
+    -- Definindo o título da janela
+    love.window.setTitle('Pong')
+
     -- Definindo a cor de background do jogo
     love.graphics.clear(40 / 255, 45 / 255, 52 / 255, 255 / 255)
 
@@ -140,6 +143,16 @@ function love.draw()
     -- Renderizando a bola no centro
     ball:render()
 
+    -- Mostrando o FPS na tela
+    displayFPS()
+
     -- Finalizando a renderização na resolução virtual
     push:apply("end")
+end
+
+-- Imprimindo o FPS atual na tela
+function displayFPS()
+    love.graphics.setFont(retroFont)
+    love.graphics.setColor(0, 255 / 255, 0, 255 / 255)
+    love.graphics.print('FPS: ' .. tostring(love.timer.getFPS()), 10, 10)
 end
