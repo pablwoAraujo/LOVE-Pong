@@ -6,8 +6,9 @@ push = require "push"
 -- https://github.com/vrld/hump/blob/master/class.lua
 Class = require "class"
 
--- Nossa classe Ball para representar a bola
+-- Importando nossas classes
 require "Ball"
+require "Paddle"
 
 -- Definindo as dimensões da janela
 WINDOW_WIDTH = 1280;
@@ -49,9 +50,9 @@ function love.load()
     player1Score = 0
     player2Score = 0
 
-    -- Posição das raquetes
-    player1Y = 30
-    player2Y = VIRTUAL_HEIGHT - 50
+    -- Inicializando as raquetes
+    player1 = Paddle(10, 30, 5, 20)
+    player2 = Paddle(VIRTUAL_WIDTH - 10, VIRTUAL_HEIGHT - 30, 5, 20)
 
     -- Criando a instância do objeto Ball
     ball = Ball(VIRTUAL_WIDTH / 2 - 2, VIRTUAL_HEIGHT / 2 - 2, 4, 4)
@@ -64,22 +65,29 @@ end
 function love.update(dt)
     -- Movimentação do player 1
     if love.keyboard.isDown("w") then
-        player1Y = math.max(0, player1Y + -PADDLE_SPEED * dt)
+        player1.dy = -PADDLE_SPEED
     elseif love.keyboard.isDown("s") then
-        player1Y = math.min(VIRTUAL_HEIGHT - 20, player1Y + PADDLE_SPEED * dt)
+        player1.dy = PADDLE_SPEED
+    else
+        player1.dy = 0
     end
 
     -- Movimentação do player 2
     if love.keyboard.isDown("up") then
-        player2Y = math.max(0, player2Y + -PADDLE_SPEED * dt)
+        player2.dy = -PADDLE_SPEED
     elseif love.keyboard.isDown("down") then
-        player2Y = math.min(VIRTUAL_HEIGHT - 20, player2Y + PADDLE_SPEED * dt)
+        player2.dy = PADDLE_SPEED
+    else
+        player2.dy = 0
     end
 
     -- Atualiza o movimento da bola se estivermos no estado de jogo "play"
     if gameState == "play" then
         ball:update(dt)
     end
+    -- Atualizando o movimento das raquetes
+    player1:update(dt)
+    player2:update(dt)
 end
 
 -- Captura as teclas pressionadas
@@ -125,11 +133,9 @@ function love.draw()
     love.graphics.print(tostring(player1Score), VIRTUAL_WIDTH / 2 - 50, VIRTUAL_HEIGHT / 3)
     love.graphics.print(tostring(player2Score), VIRTUAL_WIDTH / 2 + 30, VIRTUAL_HEIGHT / 3)
 
-    -- Renderizando a primeira raquete (Esquerda)
-    love.graphics.rectangle("fill", 10, player1Y, 5, 20)
-
-    -- Renderizando a segunda raquete (Direita)
-    love.graphics.rectangle("fill", VIRTUAL_WIDTH - 10, player2Y, 5, 20)
+    -- Renderizando as raquetes
+    player1:render()
+    player2:render()
 
     -- Renderizando a bola no centro
     ball:render()
