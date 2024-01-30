@@ -63,6 +63,20 @@ end
 
 -- Executa a cada quadro
 function love.update(dt)
+    -- Se a bola ultrapassar a borda esquerda, volte a posição inicial e atualize a pontuação
+    if ball.x < 0 then
+        player2Score = player2Score + 1
+        ball:reset()
+        gameState = 'start'
+    end
+
+    -- Se a bola ultrapassar a borda direita, volte a posição inicial e atualize a pontuação
+    if ball.x > VIRTUAL_WIDTH then
+        player1Score = player1Score + 1
+        ball:reset()
+        gameState = 'start'
+    end
+
     -- Movimentação do player 1
     if love.keyboard.isDown("w") then
         player1.dy = -PADDLE_SPEED
@@ -81,7 +95,7 @@ function love.update(dt)
         player2.dy = 0
     end
 
-    -- Verifica a colisão e atualiza o movimento da bola se estivermos no estado 
+    -- Verifica a colisão e atualiza o movimento da bola se estivermos no estado
     -- de jogo "play"
     if gameState == "play" then
         ballCollision()
@@ -118,14 +132,14 @@ function ballCollision()
         end
     end
 
-    -- Verificando a colisão com os limites da tela superior e invertendo o 
+    -- Verificando a colisão com os limites da tela superior e invertendo o
     -- movimento no eixo Y
     if ball.y <= 0 then
         ball.y = 0
         ball.dy = -ball.dy
     end
 
-    -- Verificando a colisão com os limites da tela inferior e invertendo o 
+    -- Verificando a colisão com os limites da tela inferior e invertendo o
     -- movimento no eixo Y
     if ball.y >= VIRTUAL_HEIGHT - 4 then
         ball.y = VIRTUAL_HEIGHT - 4
