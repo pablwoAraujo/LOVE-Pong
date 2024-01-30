@@ -77,7 +77,7 @@ function love.load()
     gameState = "start"
 end
 
--- Chamada sempre que redimensionamos a tela, usamos para manter a proporção da 
+-- Chamada sempre que redimensionamos a tela, usamos para manter a proporção da
 -- resolução virtual
 function love.resize(w, h)
     push:resize(w, h)
@@ -253,6 +253,7 @@ function love.draw()
         love.graphics.setFont(retroFont)
         love.graphics.printf("Welcome to Pong!", 0, 10, VIRTUAL_WIDTH, "center")
         love.graphics.printf("Press Enter to begin!", 0, 20, VIRTUAL_WIDTH, "center")
+        developedBy()
     elseif gameState == "serve" then
         love.graphics.setFont(retroFont)
         love.graphics.printf("Player " .. tostring(servingPlayer) .. "'s serve!", 0, 10, VIRTUAL_WIDTH, "center")
@@ -262,6 +263,7 @@ function love.draw()
         love.graphics.printf("Player " .. tostring(winningPlayer) .. " wins!", 0, 10, VIRTUAL_WIDTH, "center")
         love.graphics.setFont(retroFont)
         love.graphics.printf("Press Enter to restart!", 0, 30, VIRTUAL_WIDTH, "center")
+        developedBy()
     end
 
     -- Renderizando as raquetes
@@ -293,4 +295,13 @@ function displayScore()
         VIRTUAL_HEIGHT / 3)
     love.graphics.print(tostring(player2Score), VIRTUAL_WIDTH / 2 + 30,
         VIRTUAL_HEIGHT / 3)
+end
+
+-- Imprimindo o nome do desenvolvedor
+function developedBy()
+    -- Desenhando a pontuação no centro da tela
+    love.graphics.setFont(retroFont)
+    love.graphics.setColor(0, 255 / 255, 0, 255 / 255)
+    love.graphics.print("Developed by Pablwo Araujo", VIRTUAL_WIDTH / 2 - 60, VIRTUAL_HEIGHT - 20)
+    love.graphics.setColor(255 / 255, 255 / 255, 255 / 255, 255 / 255)
 end
