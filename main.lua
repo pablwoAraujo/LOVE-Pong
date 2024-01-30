@@ -27,6 +27,9 @@ function love.load()
     -- pois ele irá variar sempre na inicialização
     math.randomseed(os.time())
 
+    -- Definindo o título da janela
+    love.window.setTitle("Pong")
+
     -- Usando o filtro para evitar o desfoque no texto
     love.graphics.setDefaultFilter("nearest", "nearest")
 
@@ -45,6 +48,9 @@ function love.load()
         resizable = false,
         vsync = true
     })
+
+    -- Inicializando quem vai sacar primeiro
+    servingPlayer = 1
 
     -- Inicializando as variáveis de pontuação
     player1Score = 0
@@ -65,16 +71,18 @@ end
 function love.update(dt)
     -- Se a bola ultrapassar a borda esquerda, volte a posição inicial e atualize a pontuação
     if ball.x < 0 then
+        servingPlayer = 1
         player2Score = player2Score + 1
         ball:reset()
-        gameState = 'start'
+        gameState = "serve"
     end
 
     -- Se a bola ultrapassar a borda direita, volte a posição inicial e atualize a pontuação
     if ball.x > VIRTUAL_WIDTH then
+        servingPlayer = 2
         player1Score = player1Score + 1
         ball:reset()
-        gameState = 'start'
+        gameState = "serve"
     end
 
     -- Movimentação do player 1
@@ -95,9 +103,18 @@ function love.update(dt)
         player2.dy = 0
     end
 
-    -- Verifica a colisão e atualiza o movimento da bola se estivermos no estado
-    -- de jogo "play"
-    if gameState == "play" then
+    if gameState == "serve" then
+        -- Antes de começar o jogo, inicializamos a velocidade da bola com base
+        -- no último jogador que pontuou
+        ball.dy = math.random(-50, 50)
+        if servingPlayer == 1 then
+            ball.dx = math.random(140, 200)
+        else
+            ball.dx = -math.random(140, 200)
+        end
+    elseif gameState == "play" then
+        -- Verifica a colisão e atualiza o movimento da bola se estivermos no estado
+        -- de jogo "play"
         ballCollision()
         ball:update(dt)
     end
@@ -154,15 +171,11 @@ function love.keypressed(key)
         -- Encerrando o jogo
         love.event.quit()
     elseif key == "enter" or key == "return" then
-        -- Caso o estado esteja em "start" mude para "play"
+        -- Caso o estado esteja em "start" mude para "serve"
         if gameState == "start" then
+            gameState = "serve"
+        elseif gameState == "serve" then
             gameState = "play"
-        else
-            -- Caso contrário volte para "start"
-            gameState = "start"
-
-            -- Volve a bola para posição inicial
-            ball:reset()
         end
     end
 end
@@ -172,26 +185,25 @@ function love.draw()
     -- Começando a renderizar na resolução virtual
     push:apply("start")
 
-    -- Definindo o título da janela
-    love.window.setTitle('Pong')
-
     -- Definindo a cor de background do jogo
     love.graphics.clear(40 / 255, 45 / 255, 52 / 255, 255 / 255)
 
     -- Definindo a fonte do texto
     love.graphics.setFont(retroFont)
 
+    -- Desenhando a pontuação na tela
+    displayScore()
+
     -- Desenhando um texto na tela
     if gameState == "start" then
-        love.graphics.printf("Hello Start State!", 0, 20, VIRTUAL_WIDTH, "center")
-    else
-        love.graphics.printf("Hello Play State!", 0, 20, VIRTUAL_WIDTH, "center")
+        love.graphics.setFont(retroFont)
+        love.graphics.printf("Welcome to Pong!", 0, 10, VIRTUAL_WIDTH, "center")
+        love.graphics.printf("Press Enter to begin!", 0, 20, VIRTUAL_WIDTH, "center")
+    elseif gameState == "serve" then
+        love.graphics.setFont(retroFont)
+        love.graphics.printf("Player " .. tostring(servingPlayer) .. "'s serve!", 0, 10, VIRTUAL_WIDTH, "center")
+        love.graphics.printf("Press Enter to serve!", 0, 20, VIRTUAL_WIDTH, "center")
     end
-
-    -- Desenhando a pontuação no centro da tela
-    love.graphics.setFont(scoreFont)
-    love.graphics.print(tostring(player1Score), VIRTUAL_WIDTH / 2 - 50, VIRTUAL_HEIGHT / 3)
-    love.graphics.print(tostring(player2Score), VIRTUAL_WIDTH / 2 + 30, VIRTUAL_HEIGHT / 3)
 
     -- Renderizando as raquetes
     player1:render()
@@ -211,5 +223,15 @@ end
 function displayFPS()
     love.graphics.setFont(retroFont)
     love.graphics.setColor(0, 255 / 255, 0, 255 / 255)
-    love.graphics.print('FPS: ' .. tostring(love.timer.getFPS()), 10, 10)
+    love.graphics.print("FPS: " .. tostring(love.timer.getFPS()), 10, 10)
+end
+
+-- Imprimindo a pontuação na tela
+function displayScore()
+    -- Desenhando a pontuação no centro da tela
+    love.graphics.setFont(scoreFont)
+    love.graphics.print(tostring(player1Score), VIRTUAL_WIDTH / 2 - 50,
+        VIRTUAL_HEIGHT / 3)
+    love.graphics.print(tostring(player2Score), VIRTUAL_WIDTH / 2 + 30,
+        VIRTUAL_HEIGHT / 3)
 end
