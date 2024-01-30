@@ -48,7 +48,7 @@ function love.load()
     -- Definindo a resolução virtual, que será renderizada dentro das dimensões da janela real
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
         fullscreen = false,
-        resizable = false,
+        resizable = true,
         vsync = true
     })
 
@@ -75,6 +75,12 @@ function love.load()
 
     -- Guardando o estado do jogo
     gameState = "start"
+end
+
+-- Chamada sempre que redimensionamos a tela, usamos para manter a proporção da 
+-- resolução virtual
+function love.resize(w, h)
+    push:resize(w, h)
 end
 
 -- Executa a cada quadro
@@ -152,7 +158,7 @@ function ballCollision()
         sounds['score']:play()
 
         -- Se o player 2 conseguir 10 pontos o jogo termina, muda para o estado "done"
-        if player2Score == 2 then
+        if player2Score == 10 then
             winningPlayer = 2
             gameState = "done"
         else
@@ -170,7 +176,7 @@ function ballCollision()
         sounds['score']:play()
 
         -- Se o player 1 conseguir 10 pontos o jogo termina, muda para o estado "done"
-        if player1Score == 2 then
+        if player1Score == 10 then
             winningPlayer = 1
             gameState = "done"
         else
