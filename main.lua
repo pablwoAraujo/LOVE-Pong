@@ -81,13 +81,56 @@ function love.update(dt)
         player2.dy = 0
     end
 
-    -- Atualiza o movimento da bola se estivermos no estado de jogo "play"
+    -- Verifica a colisão e atualiza o movimento da bola se estivermos no estado 
+    -- de jogo "play"
     if gameState == "play" then
+        ballCollision()
         ball:update(dt)
     end
     -- Atualizando o movimento das raquetes
     player1:update(dt)
     player2:update(dt)
+end
+
+-- Calcula a colisão da bola com as raquetes e com as margins da tela
+function ballCollision()
+    if ball:collides(player1) then
+        ball.dx = -ball.dx * 1.03
+        ball.x = player1.x + 5
+
+        -- Mantendo a velocidade na mesma direção, mas randomizando o ângulo
+        if ball.dy < 0 then
+            ball.dy = -math.random(10, 150)
+        else
+            ball.dy = math.random(10, 150)
+        end
+    end
+
+    if ball:collides(player2) then
+        ball.dx = -ball.dx * 1.03
+        ball.x = player2.x - 4
+
+        -- Mantendo a velocidade na mesma direção, mas randomizando o ângulo
+        if ball.dy < 0 then
+            ball.dy = -math.random(10, 150)
+        else
+            ball.dy = math.random(10, 150)
+        end
+    end
+
+    -- Verificando a colisão com os limites da tela superior e invertendo o 
+    -- movimento no eixo Y
+    if ball.y <= 0 then
+        ball.y = 0
+        ball.dy = -ball.dy
+    end
+
+    -- Verificando a colisão com os limites da tela inferior e invertendo o 
+    -- movimento no eixo Y
+    if ball.y >= VIRTUAL_HEIGHT - 4 then
+        ball.y = VIRTUAL_HEIGHT - 4
+        ball.dy = -ball.dy
+    end
 end
 
 -- Captura as teclas pressionadas

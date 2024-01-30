@@ -13,6 +13,25 @@ function Ball:init(x, y, width, height)
   self.dx = math.random(-50, 50)
 end
 
+-- Espera uma raquete como argumento e retorna verdadeiro ou falso, dependendo se os
+-- objetos se sobrepõem
+function Ball:collides(paddle)
+  -- primeiro, verifique se a borda esquerda de um deles está mais à direita do
+  -- que a borda direita do outro
+  if self.x > paddle.x + paddle.width or paddle.x > self.x + self.width then
+    return false
+  end
+
+  -- em seguida, verifique se a borda inferior de um deles é mais alta que a borda
+  -- superior do outro
+  if self.y > paddle.y + paddle.height or paddle.y > self.y + self.height then
+    return false
+  end
+
+  -- Se o que foi dito acima não for verdade, eles estão se sobrepondo
+  return true
+end
+
 -- Coloca a bola no meio da tela, com velocidade inicial aleatória
 function Ball:reset()
   self.x = VIRTUAL_WIDTH / 2 - 2
